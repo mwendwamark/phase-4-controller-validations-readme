@@ -8,8 +8,19 @@ class BirdsController < ApplicationController
   end
 
   # POST /birds
+  # def create
+  #   bird = Bird.create(bird_params)
+  #   if bird.valid?
+
+  #   render json: bird, status: :created
+  #   else
+  #     render json: { errors: bird.errors }, status: :unprocessable_entity
+  #   end
+  # end
+  # In stead of writing the if else statement we could simply use the rescue method together with AvtiveRecord::RecordInvalid
+
   def create
-    bird = Bird.create(bird_params)
+    bird = Bird.create!(bird_params)
     render json: bird, status: :created
   end
 
@@ -22,7 +33,7 @@ class BirdsController < ApplicationController
   # PATCH /birds/:id
   def update
     bird = find_bird
-    bird.update(bird_params)
+    bird.update!(bird_params)
     render json: bird
   end
 
@@ -47,4 +58,7 @@ class BirdsController < ApplicationController
     render json: { error: "Bird not found" }, status: :not_found
   end
 
+  def render_unprocessable_entity_response(e)
+    render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
+  end
 end
